@@ -23,6 +23,11 @@ class RepliesManager {
         }
     }
 
+
+    getResponse(message) {
+        return '';
+    }
+
     add(trigger, response) {
 
         if (trigger in this.replies) {
