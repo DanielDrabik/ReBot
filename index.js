@@ -1,8 +1,19 @@
-const fs = require('node:fs');
-const path = require('node:path');
+const path = require('path');
+const fs = require('fs');
+const mysql = require("mysql");
+
+require('dotenv').config();
 
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
-const { token, testers, environment } = require('./config.json');
+const { TOKEN } = process.env;
+
+const connection = mysql.createPool({
+    connectionLimit: 10,
+    host: process.env.MYSQL_HOST || "localhost",
+    user: process.env.MYSQL_USER || "root",
+    password: process.env.MYSQL_PASSWORD || "password",
+    database: process.env.MYSQL_DATABASE || "test",
+});
 
 var simpleRepliesManager = require('./replies-manager/simple.js');
 var exactRepliesManager = require('./replies-manager/exact.js');
@@ -16,7 +27,7 @@ const client = new Client({ intents: [
 
 setCommands();
 
-client.login(token);
+client.login(TOKEN);
 
 client.on('interactionCreate', async interaction => {
     if (!interaction.isChatInputCommand()) {
@@ -41,12 +52,12 @@ client.on('messageCreate', async interaction => {
         return;
     }
     
-    if (
-        environment !== 'PRODUCTION' &&
-        !testers.includes(interaction.author.username + '#' + interaction.author.discriminator)
-    ) {
-        return;
-    }
+    // if (
+    //     environment !== 'PRODUCTION' &&
+    //     !testers.includes(interaction.author.username + '#' + interaction.author.discriminator)
+    // ) {
+    //     return;
+    // }
 
     const message = interaction.content;
     let response = ''
