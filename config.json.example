@@ -1,9 +1,0 @@
-{
-    "clientId": "BOT_CLIENT_ID",
-    "guildId": "SERVER_ID",
-	"token": "BOT_TOKEN",
-    "environment": "PRODUCTION",
-    "testers": [
-        "tester#1234"
-    ]
-}

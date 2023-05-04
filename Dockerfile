@@ -1,19 +1,11 @@
-# syntax=docker/dockerfile:1
+FROM node:latest
 
-FROM node:19.2-slim
+WORKDIR /usr/src/app
 
-ENV NODE_ENV=production
+COPY package*.json ./
 
-WORKDIR /app
-
-COPY ["package.json", "package-lock.json*", "./"]
-
-RUN ls
-
-RUN npm install --production
+RUN npm install
 
 COPY . .
 
-CMD [ "node", "deploy-commands.js" ]
-
-CMD [ "node", "index.js" ]
+CMD node deploy-commands.js && node index.js
