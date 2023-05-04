@@ -1,4 +1,4 @@
-const path = './replies/exact.json';
+const tableName = 'exact_replies';
 var { RepliesManager } = require('./abstract.js');
 
 class ExactRepliesManager extends RepliesManager {
@@ -7,6 +7,6 @@ class ExactRepliesManager extends RepliesManager {
     }
 }
 
-const ExactRepliesManagerObj = new ExactRepliesManager(path);
+const ExactRepliesManagerObj = new ExactRepliesManager(tableName);
 
 module.exports = ExactRepliesManagerObj;

@@ -12,7 +12,7 @@ class ListCommandAbstract {
         let list = '';
 
         try {
-            list = this.manager.getList();
+           list = await this.manager.getList();
         } catch (e) {
             await interaction.reply({ content: e.message, ephemeral: true });
             return;

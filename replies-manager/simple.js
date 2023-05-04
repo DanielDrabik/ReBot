@@ -1,4 +1,4 @@
-const path = './replies/simple.json';
+const tableName = 'simple_replies';
 var { RepliesManager } = require('./abstract.js');
 
 class SimpleRepliesManager extends RepliesManager {
@@ -16,6 +16,6 @@ class SimpleRepliesManager extends RepliesManager {
     }
 }
 
-const SimpleRepliesManagerObj = new SimpleRepliesManager(path);
+const SimpleRepliesManagerObj = new SimpleRepliesManager(tableName);
 
 module.exports = SimpleRepliesManagerObj;

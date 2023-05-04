@@ -20,4 +20,5 @@ const rest = new REST({ version: '10' }).setToken(TOKEN);
 
 rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), { body: commands })
 	.then((data) => console.log(`Successfully registered ${data.length} application commands.`))
+	.then(() => process.exit(0))
 	.catch(console.error);

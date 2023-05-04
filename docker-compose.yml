@@ -1,8 +1,27 @@
 version: '3.8'
 
 services:
- main:
-  build:
-   context: .
-  volumes:
-   - ./:/app
+  main:
+    build:
+      context: .
+    volumes:
+      - ./:/usr/src/app
+    depends_on:
+      - db
+    command: ["./wait-for-it.sh", "db:3306", "--timeout=30", "--", "bash", "-c", "node deploy-commands.js && node index.js"]
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    expose:
+      - "3306"
+
+volumes:
+  db_data:
