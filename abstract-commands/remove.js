@@ -14,16 +14,10 @@ class RemoveCommandAbstract {
     }
 
     async execute(interaction) {
-        try {
-            this.manager.remove(
-                interaction.options.getString('trigger')
-            );
-        } catch (e) {
-            await interaction.reply({ content: e.message, ephemeral: true });
-            return;
-        }
-
-        await interaction.reply({ content: 'Trigger removed!', ephemeral: true });
+        this.manager.remove(
+            interaction.options.getString('trigger')
+        ).then(() => interaction.reply({ content: 'Trigger removed!', ephemeral: true })
+        ).catch((e) => interaction.reply({ content: e, ephemeral: true }));
     }
 }
 

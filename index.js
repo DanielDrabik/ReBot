@@ -1,9 +1,6 @@
 const path = require('path');
 const fs = require('fs');
 
-console.log("EEEEEEEE");
-const mysql = require("mysql2");
-
 require('dotenv').config();
 
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
@@ -46,12 +43,12 @@ client.on('messageCreate', async interaction => {
         return;
     }
     
-    // if (
-    //     environment !== 'PRODUCTION' &&
-    //     !testers.includes(interaction.author.username + '#' + interaction.author.discriminator)
-    // ) {
-    //     return;
-    // }
+    if (
+        environment !== 'PRODUCTION' &&
+        !testers.includes(interaction.author.username + '#' + interaction.author.discriminator)
+    ) {
+        return;
+    }
 
     const message = interaction.content;
     let response = ''

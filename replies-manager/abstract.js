@@ -31,7 +31,6 @@ class RepliesManager {
         try {
             await this.pool.execute(`INSERT INTO ${this.table} (\`trigger\`, response) VALUES (?, ?)`, [trigger, response]);
         } catch (err) {
-            // TODO: Add message when trigger exists instead of breaking the app
             if (err.code === 'ER_DUP_ENTRY') {
                 throw 'Trigger already exists!';
             }

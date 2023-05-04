@@ -3,7 +3,7 @@ const simpleRepliesManager = require('../replies-manager/simple.js');
 
 class AddSimpleCommand extends AddCommandAbstract {
     constructor() {
-        super('rb_add_simple', 'Register simple reply trigger', simpleRepliesManager);
+        super(simpleRepliesManager, 'rb_add_simple', 'Register simple reply trigger');
     }
 }
 

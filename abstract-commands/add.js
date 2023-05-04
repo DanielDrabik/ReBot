@@ -1,8 +1,8 @@
 const { SlashCommandBuilder } = require('discord.js');
 
 class AddCommandAbstract {
-    constructor(name, description, repliesManager) {
-        this.repliesManager = repliesManager;
+    constructor(manager, name, description) {
+        this.manager = manager;
         this.data = new SlashCommandBuilder()
             .setName(name)
             .setDescription(description)
@@ -19,17 +19,11 @@ class AddCommandAbstract {
     }
 
     async execute(interaction) {
-        try {
-            this.repliesManager.add(
-                interaction.options.getString('trigger'),
-                interaction.options.getString('response')
-            );
-        } catch (e) {
-            await interaction.reply({ content: e.message, ephemeral: true });
-            return;
-        }
-
-        await interaction.reply({ content: 'Trigger registered!', ephemeral: true });
+        this.manager.add(
+            interaction.options.getString('trigger'),
+            interaction.options.getString('response')
+        ).then(() => interaction.reply({ content: 'Trigger registered!', ephemeral: true })
+        ).catch((e) => interaction.reply({ content: e, ephemeral: true }));
     }
 }
 
