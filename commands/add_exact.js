@@ -1,10 +1,11 @@
-const AddCommandAbstract = require('../abstract-commands/add.js');
+const createCommand = require('../create-command.js');
 const exactRepliesManager = require('../replies-manager/exact.js');
+const { options, execute } = require('../abstract-commands/add.js');
 
-class AddExactCommand extends AddCommandAbstract {
-    constructor() {
-        super(exactRepliesManager, 'rb_add_exact', 'Register exact reply trigger');
-    }
-}
-
-module.exports = new AddExactCommand();
+module.exports = createCommand(
+    exactRepliesManager, 
+    'rb_add_exact', 
+    'Register exact reply trigger', 
+    options, 
+    execute
+);

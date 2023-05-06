@@ -1,10 +1,11 @@
-const RemoveCommandAbstract = require('../abstract-commands/remove.js');
+const createCommand = require('../create-command.js');
 const simpleRepliesManager = require('../replies-manager/simple.js');
+const { options, execute } = require('../abstract-commands/remove.js');
 
-class RemoveSimpleCommand extends RemoveCommandAbstract {
-    constructor() {
-        super(simpleRepliesManager, 'rb_remove_simple', 'Remove simple reply trigger');
-    }
-}
-
-module.exports = new RemoveSimpleCommand();
+module.exports = createCommand(
+    simpleRepliesManager, 
+    'rb_remove_simple', 
+    'Remove simple reply trigger', 
+    options, 
+    execute
+);

@@ -1,10 +1,11 @@
-const ListCommandAbstract = require('../abstract-commands/list.js');
+const createCommand = require('../create-command.js');
 const exactRepliesManager = require('../replies-manager/exact.js');
+const { execute } = require('../abstract-commands/list.js');
 
-class ListExactCommand extends ListCommandAbstract {
-    constructor() {
-        super(exactRepliesManager, 'rb_list_exact', 'List all exact trigger with values');
-    }
-}
-
-module.exports = new ListExactCommand();
+module.exports = createCommand(
+    exactRepliesManager, 
+    'rb_list_exact', 
+    'List all exact trigger with values', 
+    [], 
+    execute
+);

@@ -2,10 +2,10 @@ const tableName = 'simple_replies';
 var { RepliesManager } = require('./abstract.js');
 
 class SimpleRepliesManager extends RepliesManager {
-    getResponse(message) {
+    async getResponse(message) {
         let response = '';
 
-        const simpleReplies = this.get();
+        const simpleReplies = await this.get();
         Object.keys(simpleReplies).forEach(function (trigger) {
             if (message.toLowerCase().includes(trigger.toLowerCase())) {
                 return response = simpleReplies[trigger];

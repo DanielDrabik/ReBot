@@ -42,25 +42,18 @@ client.on('messageCreate', async interaction => {
     if (interaction.author.bot) {
         return;
     }
-    
-    if (
-        environment !== 'PRODUCTION' &&
-        !testers.includes(interaction.author.username + '#' + interaction.author.discriminator)
-    ) {
-        return;
-    }
 
     const message = interaction.content;
-    let response = ''
-    
-    if (response = exactRepliesManager.getResponse(message)) {
+    let response = '';
+
+    if (response = await exactRepliesManager.getResponse(message)) {
         client.channels.cache
             .get(interaction.channelId)
             .send(response);
-    } else if (response = simpleRepliesManager.getResponse(message)) {
+    } else if (response = await simpleRepliesManager.getResponse(message)) {
         client.channels.cache
             .get(interaction.channelId)
-            .send(response); 
+            .send(response);
     }
 });
 

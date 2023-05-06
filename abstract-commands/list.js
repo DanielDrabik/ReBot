@@ -1,25 +1,16 @@
-const { SlashCommandBuilder } = require('discord.js');
+async function execute(interaction) {
+    let list = '';
 
-class ListCommandAbstract {
-    constructor(manager, name, description) {
-        this.manager = manager;
-        this.data = new SlashCommandBuilder()
-            .setName(name)
-            .setDescription(description);
+    try {
+        list = await this.manager.getList();
+    } catch (e) {
+        await interaction.reply({ content: e.message, ephemeral: true });
+        return;
     }
 
-    async execute(interaction) {
-        let list = '';
-
-        try {
-           list = await this.manager.getList();
-        } catch (e) {
-            await interaction.reply({ content: e.message, ephemeral: true });
-            return;
-        }
-
-        await interaction.reply({ content: list, ephemeral: true });
-    }
+    await interaction.reply({ content: list, ephemeral: true });
 }
 
-module.exports = ListCommandAbstract;
+module.exports = {
+    execute
+};

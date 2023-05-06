@@ -1,10 +1,11 @@
-const RemoveCommandAbstract = require('../abstract-commands/remove.js');
+const createCommand = require('../create-command.js');
 const exactRepliesManager = require('../replies-manager/exact.js');
+const { options, execute } = require('../abstract-commands/remove.js');
 
-class RemoveExactCommand extends RemoveCommandAbstract {
-    constructor() {
-        super(exactRepliesManager, 'rb_remove_exact', 'Remove exact reply trigger');
-    }
-}
-
-module.exports = new RemoveExactCommand();
+module.exports = createCommand(
+    exactRepliesManager, 
+    'rb_remove_exact', 
+    'Remove exact reply trigger', 
+    options, 
+    execute
+);

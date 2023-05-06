@@ -2,8 +2,9 @@ const tableName = 'exact_replies';
 var { RepliesManager } = require('./abstract.js');
 
 class ExactRepliesManager extends RepliesManager {
-    getResponse(message) {
-        return this.get()[message] || '';
+    async getResponse(message) {
+        const exactReplies = await this.get();
+        return exactReplies[message] || '';
     }
 }
 
