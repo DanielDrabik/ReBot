@@ -1,8 +1,10 @@
-const fs = require('node:fs');
-const path = require('node:path');
+const path = require('path');
+const fs = require('fs');
+
+require('dotenv').config();
 
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
-const { token, testers, environment } = require('./config.json');
+const { TOKEN } = process.env;
 
 var simpleRepliesManager = require('./replies-manager/simple.js');
 var exactRepliesManager = require('./replies-manager/exact.js');
@@ -16,7 +18,7 @@ const client = new Client({ intents: [
 
 setCommands();
 
-client.login(token);
+client.login(TOKEN);
 
 client.on('interactionCreate', async interaction => {
     if (!interaction.isChatInputCommand()) {
@@ -40,25 +42,18 @@ client.on('messageCreate', async interaction => {
     if (interaction.author.bot) {
         return;
     }
-    
-    if (
-        environment !== 'PRODUCTION' &&
-        !testers.includes(interaction.author.username + '#' + interaction.author.discriminator)
-    ) {
-        return;
-    }
 
     const message = interaction.content;
-    let response = ''
-    
-    if (response = exactRepliesManager.getResponse(message)) {
+    let response = '';
+
+    if (response = await exactRepliesManager.getResponse(message)) {
         client.channels.cache
             .get(interaction.channelId)
             .send(response);
-    } else if (response = simpleRepliesManager.getResponse(message)) {
+    } else if (response = await simpleRepliesManager.getResponse(message)) {
         client.channels.cache
             .get(interaction.channelId)
-            .send(response); 
+            .send(response);
     }
 });
 

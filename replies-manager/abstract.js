@@ -1,75 +1,65 @@
-const fs = require('node:fs');
+const mysql = require('mysql2/promise');
 
 class RepliesManager {
-
-    constructor(path) {
-        this.path = path;
-        this.replies = {};
+    constructor(table) {
+        this.table = table;
+        this.pool = mysql.createPool({
+            host: process.env.MYSQL_HOST,
+            user: process.env.MYSQL_USER,
+            password: process.env.MYSQL_PASSWORD,
+            database: process.env.MYSQL_DATABASE,
+            waitForConnections: true,
+            connectionLimit: 10,
+            queueLimit: 0,
+        });
 
         this.init();
     }
-    
-    init() {
 
-        if (!fs.existsSync(this.path)) {
-            fs.writeFileSync( this.path, '' );
-        }
+    async init() {
+        await this.pool.execute(`CREATE TABLE IF NOT EXISTS ${this.table} (
+            \`trigger\` VARCHAR(255) PRIMARY KEY,
+            response TEXT NOT NULL
+        )`);
+    }
 
+    async getResponse(message) {
+        // To be implemented in subclasses
+    }
+
+    async add(trigger, response) {
         try {
-            let rawReplies = fs.readFileSync(this.path);
-            this.replies = JSON.parse(rawReplies);  
-        } catch (e) {
-            this.replies = {};
+            await this.pool.execute(`INSERT INTO ${this.table} (\`trigger\`, response) VALUES (?, ?)`, [trigger, response]);
+        } catch (err) {
+            if (err.code === 'ER_DUP_ENTRY') {
+                throw 'Trigger already exists!';
+            }
+            throw err;
         }
     }
 
-
-    getResponse(message) {
-        return '';
-    }
-
-    add(trigger, response) {
-
-        if (trigger in this.replies) {
-            throw 'Trigger already exists!';
+    async remove(trigger) {
+        const [result] = await this.pool.execute(`DELETE FROM ${this.table} WHERE \`trigger\` = ?`, [trigger]);
+        if (result.affectedRows === 0) {
+            throw "Trigger doesn't exist!";
         }
-
-        this.replies[trigger] = response;
-        this.save();
-
-        return true;
     }
 
-    remove(trigger) {
-
-        if (!(trigger in this.replies)) {
-            throw "Trigger doesn't exists!";
-        }
-
-        delete this.replies[trigger]; 
-
-        this.save();
-
-        return true;
+    async get() {
+        const [rows] = await this.pool.query(`SELECT * FROM ${this.table}`);
+        return rows.reduce((acc, row) => {
+            acc[row.trigger] = row.response;
+            return acc;
+        }, {});
     }
 
-    save() {
-        fs.writeFileSync(this.path, JSON.stringify(this.replies));
-    }
-
-    get() {
-        return this.replies;
-    }
-
-    getList() {
+    async getList() {
+        const [rows] = await this.pool.query(`SELECT \`trigger\` FROM ${this.table}`);
         let list = '```\n';
-
-        for (let trigger in this.replies) {
-            list += `${trigger}\n`;
-        }
-
+        rows.forEach(row => {
+            list += `${row.trigger}\n`;
+        });
         list += '```';
-
         return list;
     }
 }

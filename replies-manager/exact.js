@@ -1,12 +1,13 @@
-const path = './replies/exact.json';
+const tableName = 'exact_replies';
 var { RepliesManager } = require('./abstract.js');
 
 class ExactRepliesManager extends RepliesManager {
-    getResponse(message) {
-        return this.get()[message] || '';
+    async getResponse(message) {
+        const exactReplies = await this.get();
+        return exactReplies[message] || '';
     }
 }
 
-const ExactRepliesManagerObj = new ExactRepliesManager(path);
+const ExactRepliesManagerObj = new ExactRepliesManager(tableName);
 
 module.exports = ExactRepliesManagerObj;
