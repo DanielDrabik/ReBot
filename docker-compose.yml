@@ -6,12 +6,14 @@ services:
       context: .
     volumes:
       - ./:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       - db
     command: ["./wait-for-it.sh", "db:3306", "--timeout=30", "--", "bash", "-c", "node deploy-commands.js && node index.js"]
+    restart: always
 
   db:
-    image: mysql:8.0
+    image: linuxserver/mariadb:latest
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
