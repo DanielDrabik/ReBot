@@ -12,4 +12,4 @@ COPY . .
 COPY wait-for-it.sh wait-for-it.sh 
 RUN chmod +x wait-for-it.sh
 
-CMD node deploy-commands.js && node index.js
+CMD ["./wait-for-it.sh", "db:3306", "--timeout=30", "--", "bash", "-c", "node deploy-commands.js && node index.js"]

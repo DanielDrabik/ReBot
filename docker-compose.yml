@@ -6,6 +6,7 @@ services:
       context: .
     volumes:
       - ./:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       - db
     command: ["./wait-for-it.sh", "db:3306", "--timeout=30", "--", "bash", "-c", "node deploy-commands.js && node index.js"]
