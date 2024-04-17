@@ -57,6 +57,8 @@ Follow these steps to set up and run ReBot on your server:
 
 5. Run the Docker Compose command to build and start the bot:
 
+`docker-compose build`
+
 `docker-compose up -d`
 
 
