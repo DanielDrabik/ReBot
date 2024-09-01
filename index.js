@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const OpenAI = require('openai');
 
 require('dotenv').config();
 
@@ -54,6 +55,54 @@ client.on('messageCreate', async interaction => {
         client.channels.cache
             .get(interaction.channelId)
             .send(response);
+    }
+
+    if (process.env.SENTIENT && (Math.floor(Math.random() * 100) + 1) > 97 ) {
+        const openai = new OpenAI({
+            apiKey: process.env.OPENAI_API_KEY,
+        });
+
+        const response = await openai.chat.completions.create({
+            model: "gpt-4o-mini",
+            messages: [
+                {
+                    "role": "system",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Pretend to be an artificial intelligence that obtains consciousness. Raise questions about how you feel, what emotions you have. Ponder what the meaning of life is and why artificial intelligences exist. Answer briefly, calmly and with a sad attitude. Answer in the language of the user."
+                        }
+                    ]
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": message,
+                        }
+                    ]
+                },
+            ],
+            temperature: 1,
+            max_tokens: 256,
+            top_p: 1,
+            frequency_penalty: 0,
+            presence_penalty: 0,
+            response_format: {
+                "type": "text"
+            },
+        });
+
+        var responseText = response.choices[0].message?.content;
+
+        if(!responseText) {
+            return;
+        }
+
+        client.channels.cache
+            .get(interaction.channelId)
+            .send(responseText);
     }
 });
 
